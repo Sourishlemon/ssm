@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 注意"xsi:schemaLocation="中的顺序,否则会出错！！！！ -->
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd">
+	 <!--http://www.springframework.org/schema/tx-->
+	 <!--http://www.springframework.org/schema/tx/spring-tx.xsd-->
+
+
+	<bean id="dao" class="cn.edu.usts.cs2019.dao.CustomerDaoImpl"></bean>
+
+	<bean id="service" class="cn.edu.usts.cs2019.service.CustomerServiceImpl" >
+	<property name="dao" ref="dao"/>
+	</bean>
+	<!--
+		id是ctx.getBean的参数值（字符串）。
+		class是一个类（包名+类名）。
+		可在Test类里获得Circle和Rectangle类的对象：
+		shape = (shape) ctx.getBean("circle");
+	-->
+		<!--  通过注解配置 -->
+		<context:annotation-config/>
+		<!-- 指定需要扫描的包 -->
+		<context:component-scan base-package="cn.edu.usts.cs2019,
+																	cn.edu.usts.cs2019" />
+
+	<!--<bean id="office" class="cn.edu.usts.cs2019.springtest.bean.example2.Office">-->
+	<!--<property name="officeNo" value="1001"/>-->
+	<!--</bean>-->
+
+
+
+	<!--Spring AOP-->
+	<!--  Spring AOP
+	<bean id="logBeforeAdvice" class="LogBeforeAdvice" />
+	<bean id="helloSpeaker" class="HelloSpeaker" />
+	-->
+	<!--<bean id="helloProxy"-->
+		  <!--class= "org.springframework.aop.framework.ProxyFactoryBean">-->
+		<!--<property name="target">-->
+			<!--<ref bean="helloSpeaker" />-->
+		<!--</property>-->
+		<!--<property name="interceptorNames">-->
+			<!--<list>-->
+				<!--<value>logBeforeAdvice</value>-->
+				<!--<value>logAfterAdvice</value>-->
+			<!--</list>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<!--<aop:aspectj-autoproxy proxy-target-class="true"/>-->
+	<!--<bean id="logAspect" class="LogAspect">-->
+	<!--</bean>-->
+
+	<!--1.配置DataSource(数据源)-->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		  scope="prototype">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+			<!--访问MySQL 8.0，下同-->
+			<!--<value>com.mysql.cj.jdbc.Driver</value>-->
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/test?useSSL=true</value>
+			<!--<value>jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&amp;useSSL=true&amp;serverTimezone=GMT%2B8-->
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>12345678</value>
+		</property>
+		<property name="maxActive">
+			<value>10</value>
+		</property>
+		<property name="initialSize">
+			<value>2</value>
+		</property>
+	</bean>
+
+	<!-- 2.配置JDBC模板 -->
+	<!--<bean id="jdbcTemplate"-->
+		  <!--class="org.springframework.jdbc.core.JdbcTemplate">-->
+		<!--&lt;!&ndash; 默认必须使用数据源 &ndash;&gt;-->
+		<!--<property name="dataSource" ref="dataSource" />-->
+	<!--</bean>-->
+
+	<!--<bean id="dao" class="cn.edu.usts.cs2018.dao.CustomerDAOImpl">-->
+		<!--<property name="dataSource">-->
+			<!--<ref bean="dataSource"/>-->
+		<!--</property>-->
+	<!--</bean>-->
+
+	<!--<bean id="customerService" class="cn.edu.usts.cs2018.service.CustomerServiceImpl">-->
+		<!--<property name="dao">-->
+			<!--<ref bean="dao"/>-->
+		<!--</property>-->
+	<!--</bean>-->
+	<!-- 结合Spring和Mybatis -->
+	<!--<bean id = "sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+		<!--<property name="dataSource" ref="dataSource" />-->
+		<!--&lt;!&ndash; 自动扫描mapping.xml文件 &ndash;&gt;-->
+		<!--<property name = "mapperLocations" value="classpath:mapper/*.xml" />-->
+		<!--&lt;!&ndash;<property name = "mapperLocations" value="cn/edu/usts/cs2018/dao/mapper/CustomerMapper.xml"/>&ndash;&gt;-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; DAO接口所在包名，Spring会自动查找其下的类 &ndash;&gt;-->
+	<!--<bean class = "org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+		<!--<property name = "basePackage" value="cn.edu.usts.cs2018.dao" />-->
+		<!--<property name = "sqlSessionFactoryBeanName" value = "sqlSessionFactory" />-->
+	<!--</bean>-->
+
+	<!--&lt;!&ndash; 定义事务 &ndash;&gt;-->
+	<!--<bean id = "transactionManager"-->
+		  <!--class = "org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+		<!--<property name = "dataSource" ref = "dataSource" />-->
+	<!--</bean>-->
+	<!--&lt;!&ndash; 使用注解定义事务 &ndash;&gt;-->
+	<!--<tx:annotation-driven transaction-manager = "transactionManager" />-->
+</beans>
